@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FMP - Fast Mailing Platform</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { color: #38bdf8; font-size: 2.5rem; }
+    header p { color: #94a3b8; }
+    .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    h2 { color: #f1f5f9; margin-bottom: 15px; border-bottom: 2px solid #334155; padding-bottom: 8px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; color: #cbd5e1; font-size: 0.9rem; }
+    input, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 1rem; }
+    button { background: #0284c7; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    button:hover { background: #0369a1; }
+    .ai-box { background: #111827; border: 1px solid #38bdf8; border-radius: 12px; padding: 20px; }
+    .ai-box h2 { color: #38bdf8; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>FMP</h1>
+      <p>Fast Mailing Platform & internet.ai Ecosystem</p>
+    </header>
+
+    <!-- Send Email Section -->
+    <div class="card">
+      <h2>Compose Email</h2>
+      <form id="emailForm">
+        <div class="form-group">
+          <label>Your Email (Sender)</label>
+          <input type="email" id="sender" placeholder="you@fmp.com" required>
+        </div>
+        <div class="form-group">
+          <label>Recipient Email</label>
+          <input type="email" id="recipient" placeholder="friend@fmp.com" required>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="subject" placeholder="Hello!" required>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="body" rows="4" placeholder="Write your email here..." required></textarea>
+        </div>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+
+    <!-- internet.ai Assistant Box -->
+    <div class="card ai-box">
+      <h2>internet.ai Assistant</h2>
+      <p style="color: #94a3b8; margin-bottom: 15px;">Ask AI to draft emails or help you write.</p>
+      <div class="form-group">
+        <input type="text" id="aiPrompt" placeholder="e.g. Draft a quick thank you note...">
+      </div>
+      <button type="button" style="background: #8b5cf6;" onclick="askAI()">Ask internet.ai</button>
+      <div id="aiResponse" style="margin-top: 15px; color: #e2e8f0; font-style: italic;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Handle Email Submission
+    document.getElementById('emailForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailData = {
+        sender: document.getElementById('sender').value,
+        recipient: document.getElementById('recipient').value,
+        subject: document.getElementById('subject').value,
+        body: document.getElementById('body').value
+      };
+
+      const res = await fetch('/api/emails/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailData)
+      });
+
+      if (res.ok) {
+        alert('Email Sent Successfully!');
+        document.getElementById('emailForm').reset();
+      } else {
+        alert('Failed to send email.');
+      }
+    });
+
+    // Mock internet.ai Assistant Functionality
+    function askAI() {
+      const prompt = document.getElementById('aiPrompt').value;
+      const responseBox = document.getElementById('aiResponse');
+      if (!prompt) return;
+      responseBox.innerText = "internet.ai is thinking...";
+      setTimeout(() => {
+        responseBox.innerText = `[internet.ai Suggestion]: Here is a draft for "${prompt}": \n\n"Hope you are doing well! Reaching out regarding our recent project updates."`;
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
